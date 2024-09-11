@@ -1,0 +1,16 @@
+# Ensure all text files use LF in the repository, but convert to CRLF on Windows
+* text=auto
+
+# Specific file formats (JavaScript, JSON, etc.) should use LF
+*.js text eol=lf
+*.jsx text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+
+# Windows-specific files
+*.bat text eol=crlf
+
+# Ensure .gitattributes always uses LF
+.gitattributes text eol=lf
