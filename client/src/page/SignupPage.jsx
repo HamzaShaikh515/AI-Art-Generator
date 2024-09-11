@@ -38,7 +38,7 @@ const SignupPage = () => {
       console.log(response.data); // Handle the response from the server
 
       // Navigate to home page on successful signup
-      navigate('/Home');
+      navigate('/');
     } catch (error) {
       if (error.response) {
         console.error('Signup error:', error.response.data);
