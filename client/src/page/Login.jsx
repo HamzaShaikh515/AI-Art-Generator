@@ -6,7 +6,8 @@ const LoginPage = () => {
     username: '',
     password: '',
   });
-
+  const [message, setMessage] = useState(null); // State for messages
+  const [messageType, setMessageType] = useState(''); // To control success or error styles
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -16,16 +17,51 @@ const LoginPage = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle login logic here, e.g., send credentials to the server
-    console.log(credentials);
 
-    // Simulate successful login (Replace this with actual login logic)
-    const loginSuccessful = true;
+    // Validate fields
+    if (!credentials.username || !credentials.password) {
+      setMessage('Please fill in both fields.');
+      setMessageType('error');
+      return;
+    }
 
-    if (loginSuccessful) {
-      navigate('/');
+    try {
+      // Send a POST request to the server to validate credentials
+      const response = await fetch('http://localhost:8080/api/v1/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(credentials),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // If login is successful
+        setMessage('Logged in successfully!');
+        setMessageType('success');
+
+        // Save JWT token to localStorage (or use cookies)
+        localStorage.setItem('token', data.token);
+
+        // Optionally save user information to state or localStorage
+        localStorage.setItem('user', JSON.stringify(data.user));
+
+        // Navigate to the home page or dashboard
+        setTimeout(() => {
+          navigate('/');
+        }, 1500); // Short delay before redirecting
+      } else {
+        // Handle errors (e.g., user not found, incorrect password)
+        setMessage(data.message);
+        setMessageType('error');
+      }
+    } catch (error) {
+      setMessage('Server error. Please try again later.');
+      setMessageType('error');
     }
   };
 
@@ -33,6 +69,13 @@ const LoginPage = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
+
+        {message && (
+          <div className={`text-center p-3 mb-4 rounded ${messageType === 'error' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
+            {message}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">

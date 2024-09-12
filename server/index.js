@@ -4,29 +4,28 @@ import cors from 'cors';
 import connectDB from './mongodb/connect.js';
 import postRoutes from './routes/postRoutes.js';
 import dalleRoutes from './routes/dalleRoutes.js';
-import signupRoutes from './routes/signupRoutes.js'; // Corrected path to lowercase 'signupRoutes'
+import signupRoutes from './routes/signupRoutes.js';
+import loginRoutes from './routes/loginRoutes.js'; // Import login routes
 
-// Load environment variables from .env file
 dotenv.config();
 
 const app = express();
 
-app.use(cors()); // Enable CORS
-app.use(express.json({ limit: '50mb' })); // Parse JSON bodies with a limit of 50MB
+app.use(cors()); 
+app.use(express.json({ limit: '50mb' }));
 
-// Define routes
+// Use routes
 app.use('/api/v1/post', postRoutes);
 app.use('/api/v1/dalle', dalleRoutes);
 app.use('/api/v1/signup', signupRoutes);
+app.use('/api/v1/login', loginRoutes); // Add login route
 
-// Test route
 app.get('/', async (req, res) => {
   res.status(200).json({
     message: 'Hello from the server!',
   });
 });
 
-// Connect to the database and start the server
 connectDB()
   .then(() => {
     const PORT = process.env.PORT || 8080;
