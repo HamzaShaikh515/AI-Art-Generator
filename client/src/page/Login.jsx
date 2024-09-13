@@ -53,7 +53,7 @@ const LoginPage = () => {
         // Navigate to the home page or dashboard
         setTimeout(() => {
           navigate('/');
-        }, 1500); // Short delay before redirecting
+        }, 1000); // Short delay before redirecting
       } else {
         // Handle errors (e.g., user not found, incorrect password)
         setMessage(data.message);

@@ -1,4 +1,3 @@
-// routes/signupRoutes.js
 import express from 'express';
 import { User } from '../mongodb/models/signup.models.js'; // Adjust the import path
 import jwt from 'jsonwebtoken';
@@ -15,10 +14,16 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
-    // Check if user already exists
-    const existingUser = await User.findOne({ username });
-    if (existingUser) {
-      return res.status(400).json({ message: 'User already exists' });
+    // Check if username already exists
+    const existingUsername = await User.findOne({ username });
+    if (existingUsername) {
+      return res.status(400).json({ message: 'Username already exists' });
+    }
+
+    // Check if email already exists
+    const existingEmail = await User.findOne({ email });
+    if (existingEmail) {
+      return res.status(400).json({ message: 'Email already exists' });
     }
 
     // Create new user

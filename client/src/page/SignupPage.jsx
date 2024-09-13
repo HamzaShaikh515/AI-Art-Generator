@@ -4,12 +4,14 @@ import { useNavigate, Link } from 'react-router-dom';
 
 const SignupPage = () => {
   const [formData, setFormData] = useState({
-    fullname: '',
+    fullName: '',
     username: '',
-    email: '',  // Added email
+    email: '',
     password: '',
   });
 
+  const [message, setMessage] = useState(null); // State for messages
+  const [messageType, setMessageType] = useState(''); // To control success or error styles
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -23,8 +25,9 @@ const SignupPage = () => {
     e.preventDefault();
 
     // Basic client-side validation
-    if (!formData.username || !formData.email || !formData.fullname || !formData.password) {
-      console.error('All fields are required');
+    if (!formData.username || !formData.email || !formData.fullName || !formData.password) {
+      setMessage('All fields are required.');
+      setMessageType('error');
       return;
     }
 
@@ -32,19 +35,31 @@ const SignupPage = () => {
       const response = await axios.post('http://localhost:8080/api/v1/signup', {
         username: formData.username,
         email: formData.email,
-        fullName: formData.fullname, // Ensure field names match
-        password: formData.password
+        fullName: formData.fullName, // Ensure field names match
+        password: formData.password,
       });
-      console.log(response.data); // Handle the response from the server
 
-      // Navigate to home page on successful signup
-      navigate('/');
+      setMessage('User created successfully!');
+      setMessageType('success');
+
+      // Navigate to the home page after a short delay
+      setTimeout(() => {
+        setMessage(null);
+        navigate('/');
+      }, 1000);
     } catch (error) {
-      if (error.response) {
-        console.error('Signup error:', error.response.data);
+      if (error.response && error.response.data.message) {
+        if (error.response.data.message.includes('User already exists')) {
+          setMessage('Username already taken.');
+        } else if (error.response.data.message.includes('Email already exists')) {
+          setMessage('Email already in use.');
+        } else {
+          setMessage(error.response.data.message); // Display server error message
+        }
       } else {
-        console.error('Signup error:', error.message);
+        setMessage('Signup error. Please try again later.');
       }
+      setMessageType('error');
     }
   };
 
@@ -52,18 +67,26 @@ const SignupPage = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-bold text-center mb-6">Sign Up</h2>
+
+        {/* Display message */}
+        {message && (
+          <div className={`text-center p-3 mb-4 rounded ${messageType === 'error' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
+            {message}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit}>
           {/* Form Fields */}
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fullname">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fullName">
               Full Name
             </label>
             <input
-              id="fullname"
-              name="fullname"
+              id="fullName"
+              name="fullName"
               type="text"
               placeholder="Enter your full name"
-              value={formData.fullname}
+              value={formData.fullName}
               onChange={handleChange}
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
