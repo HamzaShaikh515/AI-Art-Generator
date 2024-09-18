@@ -3,7 +3,8 @@ import { DB_NAME } from '../constant.js';
 import dotenv from 'dotenv';
 
 
-dotenv.config();
+dotenv.config({ path: '../.env' });
+
 
 const connectDB = async () => {
    try {
