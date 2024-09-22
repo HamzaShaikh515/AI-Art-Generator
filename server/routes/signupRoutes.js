@@ -31,7 +31,7 @@ router.post('/', async (req, res) => {
     await newUser.save();
 
     // Generate JWT token after successful signup
-    const token = newUser.generateToken();
+    const token = newUser.generateToken()
 
     res.status(201).json({
       message: 'User created successfully',

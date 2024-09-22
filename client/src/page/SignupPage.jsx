@@ -39,6 +39,8 @@ const SignupPage = () => {
         password: formData.password,
       });
 
+      localStorage.setItem('token',response.data.token);
+
       setMessage('User created successfully!');
       setMessageType('success');
 

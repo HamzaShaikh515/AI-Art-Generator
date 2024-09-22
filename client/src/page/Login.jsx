@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { useNavigate,Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
-const LoginPage = () => {
+const LoginPage = ({ setIsLoggedIn }) => {
   const [credentials, setCredentials] = useState({
     username: '',
     password: '',
   });
-  const [message, setMessage] = useState(null); // State for messages
-  const [messageType, setMessageType] = useState(''); // To control success or error styles
+  const [message, setMessage] = useState(null);
+  const [messageType, setMessageType] = useState('');
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -28,7 +28,7 @@ const LoginPage = () => {
     }
 
     try {
-      // Send a POST request to the server to validate credentials
+      // Send a POST request to validate credentials
       const response = await fetch('http://localhost:8080/api/v1/login', {
         method: 'POST',
         headers: {
@@ -40,22 +40,23 @@ const LoginPage = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // If login is successful
+        // Login successful
         setMessage('Logged in successfully!');
         setMessageType('success');
 
-        // Save JWT token to localStorage (or use cookies)
+        // Save JWT token to localStorage
         localStorage.setItem('token', data.token);
-
-        // Optionally save user information to state or localStorage
         localStorage.setItem('user', JSON.stringify(data.user));
 
-        // Navigate to the home page or dashboard
+        // Update login state
+        setIsLoggedIn(true);
+
+        // Navigate to the home page
         setTimeout(() => {
           navigate('/');
         }, 1000); // Short delay before redirecting
       } else {
-        // Handle errors (e.g., user not found, incorrect password)
+        // Handle errors
         setMessage(data.message);
         setMessageType('error');
       }
@@ -116,7 +117,7 @@ const LoginPage = () => {
           <p className="text-gray-600">
             Don't have an account?{' '}
             <Link to="/signup" className="text-blue-500 hover:underline">
-               Sign Up here!
+              Sign Up here!
             </Link>
           </p>
         </div>
