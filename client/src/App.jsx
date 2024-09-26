@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { Route, Routes, Link, useNavigate } from 'react-router-dom';
 import { Home, CreatePost, LoginPage, SignupPage } from './page';
 import ProfilePage from './page/ProfilePage';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [logoutMessage, setLogoutMessage] = useState(''); // State for logout message
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -16,10 +18,17 @@ const App = () => {
   const handleLogout = () => {
     localStorage.removeItem('token'); // Clear the token
     setIsLoggedIn(false); // Update login state
+    setLogoutMessage('Logged out successfully!'); // Set logout message
+    navigate('/'); // Redirect to home page
+
+    // Clear the message after 3 seconds
+    setTimeout(() => {
+      setLogoutMessage('');
+    }, 1500);
   };
 
   return (
-    <Router>
+    <>
       <header className="w-full flex justify-between items-center bg-white sm:px-8 px-4 py-4 border-b border-b-[#e6ebf4]">
         <nav className="flex justify-between w-full">
           {/* Left-side links (Home and Create Post) */}
@@ -59,6 +68,12 @@ const App = () => {
         </nav>
       </header>
 
+      {logoutMessage && ( // Conditional rendering of the logout message
+        <div className="bg-green-500 text-white text-center py-2">
+          {logoutMessage}
+        </div>
+      )}
+
       <main className="sm:p-8 px-4 py-8 w-full bg-[#f9fafe] min-h-[calc(100vh-73px)]">
         <Routes>
           <Route path="/" element={<Home />} />
@@ -68,7 +83,7 @@ const App = () => {
           <Route path="/profile" element={isLoggedIn ? <ProfilePage /> : <LoginPage />} />
         </Routes>
       </main>
-    </Router>
+    </>
   );
 };
 

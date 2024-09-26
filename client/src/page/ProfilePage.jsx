@@ -49,7 +49,7 @@ const ProfilePage = () => {
       {/* Profile Picture and Username */}
       <div className="flex flex-col items-center">
         <div className="w-32 h-32 mb-4 rounded-full overflow-hidden">
-          <img src={userData.profilePicture || '/Default_pfp.jpg'} alt="Profile" className="w-full h-full object-cover" />
+          <img src={userData.profilePicture || '../src/page/Default_pfp.jpg'} alt="Profile" className="w-full h-full object-cover" />
         </div>
         <h2 className="text-2xl font-bold">{userData.username}</h2>
       </div>

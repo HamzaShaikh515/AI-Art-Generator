@@ -41,7 +41,7 @@ const SignupPage = () => {
 
       localStorage.setItem('token',response.data.token);
 
-      setMessage('User created successfully!');
+      setMessage('Signed Up successfully! Redirecting to home.');
       setMessageType('success');
 
       // Navigate to the home page after a short delay

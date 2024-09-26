@@ -6,6 +6,7 @@ import postRoutes from './routes/postRoutes.js';
 import dalleRoutes from './routes/dalleRoutes.js';
 import signupRoutes from './routes/signupRoutes.js';
 import loginRoutes from './routes/loginRoutes.js'; // Import login routes
+import profileRoutes from './routes/profileRoutes.js';
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.use('/api/v1/post', postRoutes);
 app.use('/api/v1/dalle', dalleRoutes);
 app.use('/api/v1/signup', signupRoutes);
 app.use('/api/v1/login', loginRoutes); // Add login route
+app.use('/api/v1/profile', profileRoutes);
 
 app.get('/', async (req, res) => {
   res.status(200).json({

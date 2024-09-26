@@ -1,6 +1,5 @@
 import express from 'express';
 import { User } from '../mongodb/models/signup.models.js'; // Adjust the import path
-import jwt from 'jsonwebtoken';
 
 const router = express.Router();
 
@@ -34,7 +33,7 @@ router.post('/', async (req, res) => {
     const token = newUser.generateToken()
 
     res.status(201).json({
-      message: 'User created successfully',
+      message: 'Signed Up successfully! Redirecting to home.',
       token // Return the token
     });
   } catch (error) {
